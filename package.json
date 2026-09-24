@@ -1,5 +1,6 @@
 {
   "devDependencies": {
-    "supabase": "^2.117.0"
+    "supabase": "^2.117.0",
+    "wrangler": "^4.138.0"
   }
 }

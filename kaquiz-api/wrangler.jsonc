@@ -1,0 +1,17 @@
+{
+	"name": "kaquiz-api",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-09-24",
+	"observability": {
+		"enabled": true
+	},
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"hyperdrive": [
+		{
+			"binding": "HYPERDRIVE",
+			"id": "aa03682fe2c440a78fc8d2d0cf142818"
+		}
+	]
+}
