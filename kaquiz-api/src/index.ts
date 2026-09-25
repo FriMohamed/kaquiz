@@ -4,6 +4,8 @@ import { submitLocationHandler } from "./handlers/location_handler";
 import { updateUserHandler } from "./handlers/user_handler";
 import { authenticateRequest } from "./middleware/auth";
 import { deleteFriendHandler, getFriendsHandler } from "./handlers/friend_handler";
+import { swaggerUIHandler } from "./handlers/docs_handler";
+import swaggerSpec from "../swagger.json";
 
 export default {
     async fetch(request, env, ctx): Promise<Response> {
@@ -12,6 +14,14 @@ export default {
         // Route: /api/auth
         if (request.method === "POST" && url.pathname === "/api/auth") {
             return authHandler(env, request);
+        }
+
+        if (request.method === "GET" && url.pathname === "/api/docs") {
+            return swaggerUIHandler();
+        }
+
+        if (request.method === "GET" && url.pathname === "/api/swagger.json") {
+            return Response.json(swaggerSpec);
         }
 
         const authHeader = request.headers.get("authorization");
