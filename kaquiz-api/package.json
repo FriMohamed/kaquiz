@@ -16,7 +16,6 @@
 		"wrangler": "^4"
 	},
 	"dependencies": {
-		"argon2-wasm-edge": "^1.0.23",
 		"postgres": "^3.4.9"
 	}
 }
