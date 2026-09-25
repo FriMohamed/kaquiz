@@ -1,5 +1,3 @@
-export interface RegisterInput {
-  name: string;
-  email: string;
-  password: string;
+export interface AuthInput {
+    id_token: string;
 }

@@ -1,11 +1,11 @@
-import type { RegisterInput } from "../types/auth";
-import { register } from "../services/auth_service";
+import type { AuthInput } from "../types/auth";
+import { authenticateWithGoogle } from "../services/auth_service";
 
-export async function registerHandler(
+export async function authHandler(
     env: Env,
     request: Request,
 ): Promise<Response> {
-    let body: RegisterInput;
+    let body: AuthInput;
 
     try {
         body = await request.json();
@@ -16,19 +16,12 @@ export async function registerHandler(
         );
     }
 
-    if (
-        typeof body.name !== "string" ||
-        typeof body.email !== "string" ||
-        typeof body.password !== "string" ||
-        !body.name.trim() ||
-        !body.email.trim() ||
-        !body.password
-    ) {
+    if (typeof body.id_token !== "string" || !body.id_token.trim()) {
         return Response.json(
-            { error: "Name, email and password are required" },
+            { error: "id_token is required" },
             { status: 400 },
         );
     }
 
-    return register(env, body);
+    return authenticateWithGoogle(env, body.id_token.trim());
 }

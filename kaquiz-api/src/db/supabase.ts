@@ -1,30 +1,35 @@
 import postgres from "postgres";
 
-export async function createUser(
+export async function upsertGoogleUser(
     env: Env,
-    name: string,
+    googleId: string,
     email: string,
-    passwordHash: string,
+    name: string,
+    avatarUrl: string | null,
 ) {
-
     const db = postgres(env.HYPERDRIVE.connectionString, {
         max: 5,
         fetch_types: false,
         prepare: true,
     });
 
-
     const [user] = await db`
         INSERT INTO users (
-            name,
+            google_id,
             email,
-            password_hash
+            name,
+            avatar_url
         )
         VALUES (
-            ${name},
+            ${googleId},
             ${email},
-            ${passwordHash}
+            ${name},
+            ${avatarUrl}
         )
+        ON CONFLICT (google_id) DO UPDATE SET
+            name = EXCLUDED.name,
+            avatar_url = COALESCE(EXCLUDED.avatar_url, users.avatar_url),
+            updated_at = NOW()
         RETURNING id, name, email, avatar_url, created_at, updated_at
     `;
 
