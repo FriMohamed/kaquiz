@@ -4,6 +4,7 @@ import 'package:kaquiz/screens/friends_screen.dart';
 import 'package:kaquiz/screens/map_screen.dart';
 import 'package:kaquiz/screens/profile_screen.dart';
 
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 

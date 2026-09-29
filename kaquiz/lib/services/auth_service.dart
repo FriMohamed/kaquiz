@@ -8,14 +8,13 @@ class AuthService {
   AuthService();
 
   Future<String> loginWithGoogle(String idToken) async {
-    final data = await apiClient.post(
+    final accessToken = await apiClient.post<String>(
       '/auth',
-      body: {
-        'id_token': idToken,
+      body: {'id_token': idToken},
+      parser: (data) {
+        return (data as Map<String, dynamic>)['access_token'] as String;
       },
     );
-
-    final accessToken = data['access_token'] as String;
 
     await tokenStorage.saveAccessToken(accessToken);
 
