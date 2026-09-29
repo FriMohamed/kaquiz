@@ -13,5 +13,8 @@
 			"binding": "HYPERDRIVE",
 			"id": "aa03682fe2c440a78fc8d2d0cf142818"
 		}
-	]
+	],
+	"vars": {
+		"GOOGLE_CLIENT_ID": "809969609969-8bvfm2sj692otpp9lvdli03ti4gooai0.apps.googleusercontent.com"
+	}
 }

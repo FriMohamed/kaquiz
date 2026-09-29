@@ -6,7 +6,6 @@ export async function authenticateWithGoogle(
     idToken: string,
 ): Promise<Response> {
     try {
-        // Verify Google ID Token against Google's public tokeninfo endpoint
         const googleRes = await fetch(
             `https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`
         );
@@ -23,12 +22,21 @@ export async function authenticateWithGoogle(
             email?: string;
             name?: string;
             picture?: string;
+            aud?: string;
         };
 
-        if (!payload.sub || !payload.email) {
+        if (!payload.sub || !payload.email || !payload.aud) {
             return Response.json(
                 { error: "Token payload missing required fields" },
                 { status: 400 },
+            );
+        }
+
+        console.log(payload.aud);
+        if (payload.aud !== env.GOOGLE_CLIENT_ID) {
+            return Response.json(
+                { error: "Invalid token audience" },
+                { status: 401 },
             );
         }
 
@@ -37,7 +45,6 @@ export async function authenticateWithGoogle(
         const name = payload.name || email.split("@")[0];
         const avatarUrl = payload.picture || null;
 
-        // Upsert user record in Postgres via Hyperdrive
         const user = await upsertGoogleUser(
             env,
             googleId,
@@ -46,10 +53,8 @@ export async function authenticateWithGoogle(
             avatarUrl,
         );
 
-        // Generate internal app Access Token (JWT)
         const accessToken = await generateAccessToken(user.id, env.JWT_SECRET);
 
-        // Return response strictly matching Swagger spec schema
         return Response.json(
             { access_token: accessToken },
             { status: 200 },

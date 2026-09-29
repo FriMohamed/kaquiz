@@ -4,23 +4,28 @@ class GoogleAuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
 
   Future<void> initialize() async {
-    await _googleSignIn.initialize();
+    await _googleSignIn.initialize(
+      serverClientId:
+          '809969609969-8bvfm2sj692otpp9lvdli03ti4gooai0.apps.googleusercontent.com',
+    );
   }
 
   Future<String?> signIn() async {
     try {
-      final GoogleSignInAccount user = await GoogleSignIn.instance.authenticate();
+      final GoogleSignInAccount? user = await _googleSignIn.authenticate();
+      if (user == null) return null;
 
-      final authentication = user.authentication;
-
+      final GoogleSignInAuthentication authentication =
+          await user.authentication;
       return authentication.idToken;
-    } on GoogleSignInException catch (e) {
-      print('Google Sign-In error: ${e.code}');
-      return null;
-    } catch (e) {
-      print('Google Sign-In error: $e');
+    } catch (e, stackTrace) {
+      // Print the full exception details
+      print('--- GOOGLE SIGN-IN ERROR DETAILS ---');
+      print('Error: $e');
+      print('Type: ${e.runtimeType}');
+      print('StackTrace: $stackTrace');
+      print('------------------------------------');
       return null;
     }
   }
-
 }
